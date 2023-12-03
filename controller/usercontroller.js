@@ -32,13 +32,12 @@ exports.Post_Signup =async (req, res, next) => {
         return res.status(200).json({ success: true, message: 'Signup successful' })
     
     }
-        
-    
 }
     catch{
         return res.status(500).json({ success: false, message: 'Signup failed' });
     }
+}
 
-
-        
+exports.Get_Login =(req,res,next)=>{
+    res.sendFile(path.join(__dirname,'..','public','views','login.html'))
 }
