@@ -27,7 +27,7 @@ function login(event) {
         axios.post(`${Api}/login`,data).then((response)=>{
             alert(response.data.message);
             localStorage.setItem('token',response.data.token)
-            window.location.href='/login'
+            window.location.href='/chat'
         }).catch((err)=>{
             console.log(err);
         })

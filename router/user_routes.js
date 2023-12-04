@@ -10,4 +10,6 @@ router.get('/login',user_controller.Get_Login);
 
 router.post('/login',user_controller.Post_login);
 
+router.get('/chat',user_controller.Get_ChatPage);
+
 module.exports=router;

@@ -82,3 +82,7 @@ function generateToken(id){
     console.log(SecretKey)
     return jwt.sign({userId : id },SecretKey)
 }
+
+exports.Get_ChatPage=(req,res,next)=>{
+    res.sendFile(path.join(__dirname,'..','public','views','chats.html'));
+}
