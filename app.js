@@ -13,7 +13,7 @@ const app= express();
 app.use(express.json())
 app.use(user_routes)
 app.use(body_parser.urlencoded({ extended: false }));
-app.use(cors());
+//app.use(cors());
 app.use(express.static(path.join(__dirname,'public')))
 
 sequelize.sync().then(()=>{
