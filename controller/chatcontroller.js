@@ -2,6 +2,9 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 const User = require('../models/users');
 const Chats = require('../models/chats');
+const sequelize = require('../helper/database');
+const {Op} = require('sequelize');
+const chats = require('../models/chats');
 
 exports.Post_Message = async(req,res,next)=>{
     try{
@@ -35,13 +38,53 @@ exports.Post_Message = async(req,res,next)=>{
 }
 
 exports.Get_Messages = async (req,res,next)=>{
-    const allchats = await Chats.findAll();
+    try{
+        const count = await Chats.count();
+
+        const allchats = await Chats.findAll({
+            order:[['createdAt','ASC']],
+            limit: 10,
+            offset: count - 10
+        }
+        
+        );
+        const userId = req.user.id;
+        console.log(userId)
+        return res.status(200).json({
+            success:true,
+            message: allchats,
+            userId:userId
+        })
+    }
+    catch(err){
+        console.log('GET Messages err',err)
+    }
+    
+
+}
+exports.Get_New_Messages=async(req,res,next)=>{
+    try{
+    const params = req.query.lastmessageid ;
+    console.log(params)
+
+    const response = await Chats.findAll({
+        where:{
+            id:{ [Op.gt]: params}
+        }
+        
+    })
+
     const userId = req.user.id;
     console.log(userId)
     return res.status(200).json({
         success:true,
-        message: allchats,
+        message: response,
         userId:userId
     })
 }
 
+    catch(err){
+        console.log('GET New Message Error', err)
+    }
+    
+}
