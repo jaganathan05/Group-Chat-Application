@@ -33,3 +33,15 @@ exports.Post_Message = async(req,res,next)=>{
     }
 
 }
+
+exports.Get_Messages = async (req,res,next)=>{
+    const allchats = await Chats.findAll();
+    const userId = req.user.id;
+    console.log(userId)
+    return res.status(200).json({
+        success:true,
+        message: allchats,
+        userId:userId
+    })
+}
+

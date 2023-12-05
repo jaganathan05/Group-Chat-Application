@@ -15,10 +15,46 @@ sendbtn.addEventListener('click', () => {
     })
         .then(response => {
             if (response) {
-                alert(response.data.message);
+                window.location.href='/chat'
             }
         })
         .catch(err => {
             console.log(err);
         });
 });
+
+window.addEventListener('DOMContentLoaded',async ()=>{
+    const token = localStorage.getItem('token'); 
+
+     const response =await axios.get(`${API}/chat/getmessage`,{
+        headers:{
+            Authorization:token
+        }
+    
+    })
+
+    if(response){
+        response.data.message.forEach(chat => {
+            console.log(response.data.userId)
+            show_messages(chat,response.data.userId)
+        });
+    }
+})
+
+function show_messages(chat,id){
+    const chat_container = document.getElementById('chatBox');
+    const showmessage_container = document.createElement('div');
+    var name =chat.name;
+    showmessage_container.className='rightsidemessages'
+    console.log(chat.name)
+    if(id === chat.userId){
+         name = 'You'
+        showmessage_container.className='leftsidemessages'
+    }
+    
+    showmessage_container.innerHTML=`
+    <p>${name}: ${chat.message}</p>`
+
+    chat_container.appendChild(showmessage_container)
+    chat_container.scrollTop = chat_container.scrollHeight;
+}
