@@ -15,7 +15,7 @@ sendbtn.addEventListener('click', () => {
     })
         .then(response => {
             if (response) {
-                window.location.href='/chat'
+                console.log(response)
             }
         })
         .catch(err => {
@@ -23,23 +23,25 @@ sendbtn.addEventListener('click', () => {
         });
 });
 
-window.addEventListener('DOMContentLoaded',async ()=>{
+window.addEventListener('DOMContentLoaded', ()=>{
     const token = localStorage.getItem('token'); 
-
-     const response =await axios.get(`${API}/chat/getmessage`,{
-        headers:{
-            Authorization:token
-        }
+    setInterval(async()=>{
+        const response =await axios.get(`${API}/chat/getmessage`,{
+            headers:{
+                Authorization:token
+            }
+        
+        })
     
+        if(response){
+            response.data.message.forEach(chat => {
+                console.log(response.data.userId)
+                show_messages(chat,response.data.userId)
+            });
+        }
     })
-
-    if(response){
-        response.data.message.forEach(chat => {
-            console.log(response.data.userId)
-            show_messages(chat,response.data.userId)
-        });
-    }
-})
+     
+},1000)
 
 function show_messages(chat,id){
     const chat_container = document.getElementById('chatBox');

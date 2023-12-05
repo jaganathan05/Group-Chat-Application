@@ -20,7 +20,9 @@ app.use(user_routes)
 app.use('/chat',chat_routes);
 
 app.use(body_parser.urlencoded({ extended: false }));
-app.use(cors());
+app.use(cors({
+    origin: "*"
+}));
 app.use(express.static(path.join(__dirname,'public')))
 
 //relationship between Tables
