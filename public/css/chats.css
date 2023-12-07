@@ -1,8 +1,7 @@
 body {
-    background: #2980b9;  /* fallback for old browsers */
-    background: -webkit-linear-gradient(to right, #2c3e50, #2980b9);  /* Chrome 10-25, Safari 5.1-6 */
-    background: linear-gradient(to right, #2c3e50, #2980b9); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-
+    background: #2980b9;
+    background: -webkit-linear-gradient(to right, #2c3e50, #2980b9);
+    background: linear-gradient(to right, #2c3e50, #2980b9);
 }
 
 .container {
@@ -15,13 +14,23 @@ body {
 h1 {
     text-align: center;
     font-size: 22px;
-    font-weight: 700; color:#06f5b9;
+    font-weight: 700;
+    color: #06f5b9;
     text-transform: uppercase;
-    word-spacing: 1px; letter-spacing:2px;
+    word-spacing: 1px;
+    letter-spacing: 2px;
 }
 
-#chatBox {
-    background-color: #fff;
+#mainContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+#groupBox {
+    background-image: linear-gradient( 135deg, #C2FFD8 10%, #465EFB 100%);
     border: 1px solid #e60505;
     border-radius: 5px;
     overflow-y: auto;
@@ -31,11 +40,49 @@ h1 {
     max-width: 700px;
     padding: 10px;
 }
+#addgroup{
+    margin: 10px auto;
+    display: block;
+}
+
+#addgroupform{
+    display: none;
+    background-image: linear-gradient( 135deg, #C2FFD8 10%, #465EFB 100%);
+    border: 1px solid #e60505;
+    border-radius: 5px;
+    overflow-y: auto;
+    margin: 20px auto;
+    margin-left: 50px;
+    height: 400px;
+    width: 70%;
+    max-width: 700px;
+    padding: 10px;
+}
+
+#addgroupform form h1{
+    color: #4d0101;
+}
+
+#chatBox {
+    background-image: linear-gradient( 135deg, #C2FFD8 10%, #465EFB 100%);         
+    border: 3px solid rgb(9, 83, 31);
+    border-radius: 20px;
+    overflow-y: auto;
+    margin: 20px auto;
+    height: 400px;
+    width: 90%;
+    max-width: 700px;
+    padding: 10px;
+}
+#chatBoxcontainer{
+    display: none;
+}
 
 .row {
-    margin-top: 10px;
-    display:flex;
-    justify-content: space-between;
+    margin: 10px;
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-evenly;
     align-items: center;
 }
 
@@ -43,20 +90,20 @@ textarea {
     height: 50px;
     min-width: 300px;
     margin: 10px auto;
-    resize:none;
+    resize: none;
 }
 
 #sendmessage {
-    margin-left: 10px;
     width: 80px;
 }
+
 .rightsidemessages {
     display: flex;
     font-family: 'Trebuchet MS';
-    justify-content: flex-end; /* Align to the right */
+    justify-content: flex-end;
     background: #2695df;
     color: rgb(2, 32, 4);
-    margin-bottom: 10px; /* Add some space between messages */
+    margin-bottom: 10px;
     padding: 10px;
     border-radius: 5px;
 }
@@ -70,20 +117,46 @@ textarea {
     padding: 10px;
     border-radius: 5px;
 }
+.group-name{
+    margin: 10px auto;
+    text-align: center;
+    border: 1px solid black;
+    border-radius: 20px;
+    background-color: blue;
+    color: white;
+}
+.group-name.active {
+    background-color: #dadd15; /* Set your desired background color */
+    color: rgb(17, 0, 252) /* Set your desired text color */
+    /* Add any other styles you want for the active state */
+}
 
 
 @media (min-width: 768px) {
-    /* Adjust styles for larger screens */
     textarea {
         width: calc(70% - 10px);
         max-width: 500px;
         margin: 10px 0;
     }
+
+
+    #addgroupform{
+        width: 50%;
+        max-width: 700px;
+        padding: 10px;
+    }
 }
 
-
 @media (max-width: 767px) {
+
+    #groupBox{
+        height: 300px;
+    }
     /* Adjust styles for smaller screens */
+    #mainContainer {
+        flex-direction: column; /* Reverse the flex direction for mobile */
+    }
+
     textarea {
         height: 50px;
         min-width: 80px;
@@ -94,5 +167,13 @@ textarea {
     #sendmessage {
         width: 90%;
         margin: 10px auto;
+    }
+
+    #addgroupform{
+        width: 90%;
+        max-width: 700px;
+        padding: 10px;
+        margin: 20px auto;
+        
     }
 }

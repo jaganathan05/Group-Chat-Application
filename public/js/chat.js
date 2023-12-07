@@ -1,22 +1,27 @@
-
+const chatBox = document.getElementById('chatBoxcontainer');
 const sendbtn = document.getElementById('sendmessage');
 const API = 'http://localhost:3000';
 
 sendbtn.addEventListener('click', (event) => {
     var textarea = document.getElementById('messageInput');
     if (!textarea.checkValidity()) {
-        // The form is not valid; prevent submission
         event.preventDefault();
 
         textarea.checkValidity
-        // Optionally, you can provide user feedback about the required field.
-        // For example, you can highlight the textarea or display an error message.
+        
     }
     else{
     const message = document.getElementById('messageInput').value;
     const token = localStorage.getItem('token');
+    const selectedGroup = document.querySelector('.group-name.active');
+        const groupId = selectedGroup ? selectedGroup.dataset.groupId : null;
+
+        if (!groupId) {
+            console.error('No group selected');
+            return;
+        }
     const data = {
-        message
+        message,groupId
     };
 
     axios.post(`${API}/chat/sendmessage`, data, {
@@ -27,7 +32,6 @@ sendbtn.addEventListener('click', (event) => {
         .then(response => {
             if (response) {
                 document.getElementById('messageInput').value=''
-                console.log(response)
             }
         })
         .catch(err => {
@@ -40,45 +44,108 @@ sendbtn.addEventListener('click', (event) => {
 
 window.addEventListener('DOMContentLoaded', async()=>{
     const token = localStorage.getItem('token'); 
-    let params = 0;
-    console.log(params)
-        const response =await axios.get(`${API}/chat/getmessage`,{
-            headers:{
-                Authorization:token
-            }
-        
-        })
-        console.log('settimeout',params);
-    
-        if(response){
-            localStorage.setItem('chats', JSON.stringify(response.data.message))
+    const response1 = await axios.get(`${API}/getgroups`,
+    {
+        headers: {
+            Authorization: token
+        }
+    })
 
-            const chats = JSON.parse(localStorage.getItem('chats'))
-            chats.forEach(chat => {
-                console.log(response.data.userId)
-                show_messages(chat,response.data.userId)
+    if(response1){
+        response1.data.Groups.forEach((group)=>{
+            show_groups(group);
+        })
+    }
+
+    const groupElements = document.querySelectorAll('.group-name');
+    groupElements.forEach((groupElement) => {
+        groupElement.addEventListener('click', async () => {
+            groupElements.forEach((otherGroup) => {
+                otherGroup.classList.remove('active');
             });
-            params = chats[9].id;
+    
+            groupElement.classList.add('active');
+    
+            const chat_container = document.getElementById('chatBox');
+            if (chatBox.style.display === 'none') {
+                chatBox.style.display = 'block';
+                addgroupform.style.display='none';
+            } else {
+                chatBox.style.display = 'block';
             }
-        
-        setInterval(async()=>{
-            const response =await axios.get(`${API}/chat/getNewmessage?lastmessageid=${params}`,{
+
+            if (addgroupform.style.display === 'block') {
+                addgroupcancel.style.display = 'block';
+    
+                // Trigger the click event on addgroupcancel
+                addgroupcancel.click();
+            } else {
+                addgroupbtn.style.display='block';
+            }
+    
+            const groupId = groupElement.dataset.groupId;
+            chat_container.innerHTML = '';
+            await loadGroupMessages(groupId);
+        });
+    });
+    
+    
+    
+
+    async function loadGroupMessages(id){
+        try{
+            const response =await axios.get(`${API}/chat/getmessage?groupid=${id}`,{
                 headers:{
                     Authorization:token
                 }
             
             })
-
+    
+        
             if(response){
-                
+                const lastmessageid = response.data.message[response.data.message.length -1].id;
+                localStorage.setItem('group',id);
+                localStorage.setItem('lastmessageid',lastmessageid);
                 response.data.message.forEach(chat => {
-                    console.log(response.data.userId)
+
                     show_messages(chat,response.data.userId)
                 });
+                
+                }  
+        }
+        catch{
 
-                params = response.data.message[response.data.message.length - 1].id;
-                }
-        },1000)
+        }
+              
+    }
+
+
+        
+        
+    setInterval(async () => {
+        const selectedGroup = document.querySelector('.group-name.active');
+        const groupId = selectedGroup ? selectedGroup.dataset.groupId : null;
+    
+    
+        const params = localStorage.getItem('lastmessageid');
+        const response = await axios.get(`${API}/chat/getNewmessage?lastmessageid=${params}&groupid=${groupId}`, {
+            headers: {
+                Authorization: token
+            }
+        });
+    
+        if (response) {
+            response.data.message.forEach(chat => {
+                show_messages(chat, response.data.userId);
+            });
+    
+            const lastmessage = response.data.message[response.data.message.length - 1].id;
+            if (lastmessage > params) {
+                localStorage.setItem('lastmessageid', lastmessage);
+            }
+        }
+    }, 1000);
+    
        })
      
 
@@ -87,7 +154,6 @@ function show_messages(chat,id){
     const showmessage_container = document.createElement('div');
     var name =chat.name;
     showmessage_container.className='rightsidemessages'
-    console.log(chat.name)
     if(id === chat.userId){
          name = 'You'
         showmessage_container.className='leftsidemessages'
@@ -99,3 +165,73 @@ function show_messages(chat,id){
     chat_container.appendChild(showmessage_container)
     chat_container.scrollTop = chat_container.scrollHeight;
 }
+
+function show_groups(group) {
+    const group_container = document.getElementById('groupBox');
+    const showgroup_container = document.createElement('div');
+  
+    showgroup_container.setAttribute('data-group-id', group.id);
+    showgroup_container.className = 'group-name'; 
+  
+    showgroup_container.innerHTML = `<p>${group.name}</p>`;
+    group_container.appendChild(showgroup_container);
+  }
+  
+  
+
+const addgroupbtn = document.getElementById('addgroup');
+const addgroupform = document.getElementById('addgroupform')
+
+addgroupbtn.addEventListener('click',()=>{
+    if(addgroupform.style.display==='none'){
+        addgroupform.style.display='block';
+        addgroupbtn.style.display='none';
+        chatBox.style.display='none'        
+    }
+    else{
+        addgroupform.style.display='none';
+        chatBox.style.display='block'
+        
+    }
+})
+
+const addgroupcancel = document.getElementById('addgroupcancel');
+
+addgroupcancel.onclick=()=>{
+    if(addgroupform.style.display==='block'){
+        addgroupform.style.display='none';
+        addgroupbtn.style.display='block'
+        chatBox.style.display='block'
+    }
+    else{
+        addgroupform.style.display='block';
+        addgroupbtn.style.display='none';
+        chatBox.style.display='none' 
+    }
+}
+
+function creategroup(event){
+    event.preventDefault();
+    const Groupname = document.getElementById('groupname').value;
+
+    const Members = document.getElementById('groupemails').value;
+
+    const token = localStorage.getItem('token');
+
+
+    const MembersArray = Members.split(',')
+
+    const data={
+        Groupname, MembersArray
+    }
+
+    axios.post(`${API}/creategroup`,data,{
+        headers: {
+            Authorization: token
+        }
+    }).then((response)=>{
+        alert('New Group Created')
+        window.location.href='/chat'
+    })
+}
+

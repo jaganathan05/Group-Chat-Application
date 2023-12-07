@@ -10,7 +10,6 @@ exports.Get_Signup=(req,res,next)=>{
 exports.Post_Signup =async (req, res, next) => {
     try{
     const { name, email, phoneno, password } = req.body;
-    console.log(name, email, phoneno, password);
      const usercheck = await User.findOne({
         where:{
             email:email,phoneno:phoneno
@@ -46,7 +45,6 @@ exports.Get_Login =(req,res,next)=>{
 exports.Post_login = async (req,res,next)=>{
     try{
         const {email,password}= req.body;
-        console.log(email,password);
         const user = await User.findOne({
             where:{
                 email:email
@@ -79,7 +77,6 @@ exports.Post_login = async (req,res,next)=>{
 
 function generateToken(id){
     const SecretKey = process.env.SecretKey;
-    console.log(SecretKey)
     return jwt.sign({userId : id },SecretKey)
 }
 

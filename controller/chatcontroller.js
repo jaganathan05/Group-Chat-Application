@@ -9,16 +9,13 @@ const chats = require('../models/chats');
 exports.Post_Message = async(req,res,next)=>{
     try{
         const user =req.user;
-        const {message} = req.body;
-
-        console.log(user.id,"  ", message)
-        
-        console.log(typeof(message))
+        const {message,groupId} = req.body;
 
         Chats.create({
             name: user.name,
             message: message,
-            userId: user.id
+            userId: user.id,
+            groupId: groupId
         })
         .then(savemessage => {
             // handle success
@@ -38,18 +35,18 @@ exports.Post_Message = async(req,res,next)=>{
 }
 
 exports.Get_Messages = async (req,res,next)=>{
+    
     try{
-        const count = await Chats.count();
-
+        const groupid = req.query.groupid
         const allchats = await Chats.findAll({
+            where:{
+                groupId: groupid
+            },
             order:[['createdAt','ASC']],
-            limit: 10,
-            offset: count - 10
         }
         
         );
         const userId = req.user.id;
-        console.log(userId)
         return res.status(200).json({
             success:true,
             message: allchats,
@@ -64,18 +61,19 @@ exports.Get_Messages = async (req,res,next)=>{
 }
 exports.Get_New_Messages=async(req,res,next)=>{
     try{
-    const params = req.query.lastmessageid ;
-    console.log(params)
+    const lastmessage = req.query.lastmessageid ;
+    const groupid = req.query.groupid;
 
     const response = await Chats.findAll({
         where:{
-            id:{ [Op.gt]: params}
+            id:{ [Op.gt]: lastmessage
+            },
+            groupId: groupid
         }
         
     })
 
     const userId = req.user.id;
-    console.log(userId)
     return res.status(200).json({
         success:true,
         message: response,
