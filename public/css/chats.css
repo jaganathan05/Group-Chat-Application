@@ -44,6 +44,66 @@ h1 {
     margin: 10px auto;
     display: block;
 }
+#groupsettings {
+    display: none;
+    cursor: pointer;
+    color: rgb(255, 251, 0);
+    padding: 16px;
+    font-size: 16px;
+    border: none;
+  }
+  
+  #dropdown {
+    position: absolute;
+    display: inline-block;
+    margin-top: 50px;
+    margin-right: 50px;
+    top: 20px; /* Adjust this value based on your layout */
+    right: 100px; /* Adjust this value based on your layout */
+  }
+  
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #333; /* Change to your desired dark color */
+    min-width: 150px; /* Adjust this value based on your content */
+    border-radius: 15px;
+    z-index: 1;
+    color: white;
+    padding: 15px 0;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+  }
+  
+  .dropdown-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .dropdown-content ul li {
+    width: 100%;
+    padding: 10px 15px;
+    margin-bottom: 5px;
+  }
+  
+  .dropdown-content ul li i {
+    padding-right: 10px;
+  }
+  
+  .dropdown-content ul li:hover {
+    cursor: pointer;
+    background-color: rgba(0, 0, 0, 0.4); /* Adjust the transparency if needed */
+  }
+  
+  #dropdown:hover .dropdown-content {
+    display: block;
+  }
+  
+  #dropdown:hover #groupsettings {
+    color: #ddd;
+  }
+  
+  
 
 #addgroupform{
     display: none;
@@ -58,9 +118,37 @@ h1 {
     max-width: 700px;
     padding: 10px;
 }
-
+#addnewmembercontainer{
+    display: none;
+}
+#addnewmemberbox{
+    background-image: linear-gradient( 135deg, #C2FFD8 10%, #465EFB 100%);
+    border: 1px solid #e60505;
+    border-radius: 5px;
+    overflow-y: auto;
+    margin: 20px auto;
+    margin-left: 50px;
+    height: 400px;
+    width: 70%;
+    max-width: 700px;
+    padding: 10px;
+}
 #addgroupform form h1{
     color: #4d0101;
+}
+#showmembercontainer{
+    display: none;
+}
+#membersBox{
+    background-image: linear-gradient( 135deg, #C2FFD8 10%, #465EFB 100%);         
+    border: 3px solid rgb(9, 83, 31);
+    border-radius: 20px;
+    overflow-y: auto;
+    margin: 10px auto;
+    height: 400px;
+    width: 90%;
+    max-width: 700px;
+    padding: 10px;
 }
 
 #chatBox {
@@ -68,12 +156,13 @@ h1 {
     border: 3px solid rgb(9, 83, 31);
     border-radius: 20px;
     overflow-y: auto;
-    margin: 20px auto;
+    margin: 10px auto;
     height: 400px;
     width: 90%;
     max-width: 700px;
     padding: 10px;
 }
+
 #chatBoxcontainer{
     display: none;
 }
@@ -130,6 +219,11 @@ textarea {
     color: rgb(17, 0, 252) /* Set your desired text color */
     /* Add any other styles you want for the active state */
 }
+.member-details {
+    margin-top: 10px;
+    border-bottom: 2px solid #ccc;
+    padding-bottom: 10px;
+  }
 
 
 @media (min-width: 768px) {
@@ -175,5 +269,10 @@ textarea {
         padding: 10px;
         margin: 20px auto;
         
+    }
+    #dropdown{
+        top: 20px;
+        right: 0px;
+        left: 10px;
     }
 }

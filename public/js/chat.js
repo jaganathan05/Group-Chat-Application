@@ -44,6 +44,7 @@ sendbtn.addEventListener('click', (event) => {
 
 window.addEventListener('DOMContentLoaded', async()=>{
     const token = localStorage.getItem('token'); 
+    const groupSettingsIcon = document.getElementById('groupsettings');
     const response1 = await axios.get(`${API}/getgroups`,
     {
         headers: {
@@ -65,11 +66,14 @@ window.addEventListener('DOMContentLoaded', async()=>{
             });
     
             groupElement.classList.add('active');
+            
     
             const chat_container = document.getElementById('chatBox');
             if (chatBox.style.display === 'none') {
                 chatBox.style.display = 'block';
+                showmembercontainer.style.display='none'
                 addgroupform.style.display='none';
+                addnewmembercontainer.style.display='none';
             } else {
                 chatBox.style.display = 'block';
             }
@@ -86,6 +90,12 @@ window.addEventListener('DOMContentLoaded', async()=>{
             const groupId = groupElement.dataset.groupId;
             chat_container.innerHTML = '';
             await loadGroupMessages(groupId);
+
+            if (groupElement.classList.contains('active')) {
+                groupSettingsIcon.style.display = 'block';
+            } else {
+                groupSettingsIcon.style.display = 'none';
+            }
         });
     });
     
@@ -122,29 +132,41 @@ window.addEventListener('DOMContentLoaded', async()=>{
 
         
         
-    setInterval(async () => {
+    setInterval(() => {
         const selectedGroup = document.querySelector('.group-name.active');
         const groupId = selectedGroup ? selectedGroup.dataset.groupId : null;
-    
-    
         const params = localStorage.getItem('lastmessageid');
-        const response = await axios.get(`${API}/chat/getNewmessage?lastmessageid=${params}&groupid=${groupId}`, {
-            headers: {
-                Authorization: token
-            }
-        });
     
-        if (response) {
-            response.data.message.forEach(chat => {
-                show_messages(chat, response.data.userId);
+        if (selectedGroup) {
+            axios.get(`${API}/chat/getNewmessage?lastmessageid=${params}&groupid=${groupId}`, {
+                headers: {
+                    Authorization: token
+                }
+            }).then((response) => {
+                if (response.data && response.data.message) {
+                    response.data.message.forEach(chat => {
+                        show_messages(chat, response.data.userId);
+                    });
+    
+                    const lastmessage = response.data.message[response.data.message.length - 1];
+    
+                    // Check if lastmessage is defined before accessing its 'id' property
+                    if (lastmessage && lastmessage.id) {
+                        const lastmessageId = lastmessage.id;
+                        if (lastmessageId > params) {
+                            localStorage.setItem('lastmessageid', lastmessageId);
+                        }
+                    }
+                }
+            }).catch(err => {
+                console.log(err);
             });
-    
-            const lastmessage = response.data.message[response.data.message.length - 1].id;
-            if (lastmessage > params) {
-                localStorage.setItem('lastmessageid', lastmessage);
-            }
         }
-    }, 1000);
+    }, 1000); // Adjust the interval as needed
+    
+    
+    
+    
     
        })
      
@@ -186,11 +208,15 @@ addgroupbtn.addEventListener('click',()=>{
     if(addgroupform.style.display==='none'){
         addgroupform.style.display='block';
         addgroupbtn.style.display='none';
-        chatBox.style.display='none'        
+        addnewmembercontainer.style.display='none';
+        chatBox.style.display='none';
+        groupSettingsIcon.style.display='none' ;
+        showmembercontainer.style.display='none'      
     }
     else{
         addgroupform.style.display='none';
         chatBox.style.display='block'
+        groupSettingsIcon.style.display='block';
         
     }
 })
@@ -235,3 +261,7 @@ function creategroup(event){
     })
 }
 
+const groupSettingsIcon = document.getElementById('groupsettings');
+groupSettingsIcon.addEventListener('click',()=>{
+    
+})
