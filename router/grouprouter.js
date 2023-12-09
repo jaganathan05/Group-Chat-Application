@@ -10,5 +10,8 @@ router.get('/getgroupmembers',auth_middleware.authentication, groupcontroller.Ge
 router.post('/addnewmember',auth_middleware.authentication,groupcontroller.AddnewMember);
 router.post('/makegroupadmin',auth_middleware.authentication,groupcontroller.Makeadmin);
 router.post('/removegroupmember',auth_middleware.authentication,groupcontroller.RemoveMember);
-router.post('/removeadmin',auth_middleware.authentication,groupcontroller.RemoveAdmin)
+router.post('/removeadmin',auth_middleware.authentication,groupcontroller.RemoveAdmin);
+
+router.post('/leavegroup',auth_middleware.authentication,groupcontroller.leavegroup);
+router.post('/deletegroup',auth_middleware.authentication,groupcontroller.DeleteGroup);
 module.exports = router;

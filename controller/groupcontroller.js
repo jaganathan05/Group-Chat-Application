@@ -5,6 +5,7 @@ const Group = require('../models/group');
 const User = require('../models/users');
 const UserGroup = require('../models/usergroup');
 const user = require('../models/users');
+const usergroup = require('../models/usergroup');
 
 exports.createGroup = async (req, res, next) => {
   const t = await sequelize.transaction();
@@ -153,19 +154,25 @@ exports.AddnewMember = async (req, res, next) => {
           }
         },transaction:t
       })
-  
-      await Promise.all(users.map(async (user) => {
-        await UserGroup.create({
-          isadmin: 'false',
-          userId: user.id,
-          groupId: group_id
-        }, { transaction: t });
-      }));
+      if (users){
+        await Promise.all(users.map(async (user) => {
+          await UserGroup.create({
+            isadmin: 'false',
+            userId: user.id,
+            groupId: group_id
+          }, { transaction: t });
+        }));
+        
+        
+        
+        await t.commit()
+        return res.status(201).json({success:true,message: 'new members added' })
+      }
+      else{
+        await t.commit()
+        return res.status(201).json({success:true,message: 'This User Not in ChatApp' })
+      }
       
-      
-      
-      await t.commit()
-      return res.status(201).json({success:true,message: 'new members added' })
     }
     else{
       return res.status(200).json({success:true, message: 'You are not admin for this Group' });
@@ -296,4 +303,97 @@ exports.RemoveAdmin=async (req,res,next)=>{
     console.error(err);
     res.status(500).json({ success: false, message: 'Something went wrong' });
   }
+}
+
+exports.leavegroup = async (req, res, next) => {
+  try {
+    const { groupId } = req.body;
+    const UserId = req.user.id;
+
+    // Check if the user is an admin for the group
+    const checkAdmin = await UserGroup.findOne({
+      where: {
+        isadmin: 'true',
+        userId: UserId,
+        groupId: groupId,
+      },
+    });
+
+    if(checkAdmin){
+      const checkOtherAdmins = await UserGroup.findAll({
+        where: {
+          isadmin: 'true',
+          groupId: groupId,
+          userId: { [Op.ne]: UserId }, 
+        },
+      });
+  
+      if (checkOtherAdmins.length === 0) {
+        return res.status(200).json({ success: false, message: 'You are the only admin. Make another user admin before leaving.' });
+      }
+      else{
+        const leavegroup = await UserGroup.destroy({
+          where:{
+            userId: UserId,
+            groupId:groupId
+          }
+        })
+        return res.status(200).json({ success: true, message: 'Left the group successfully' });
+      }
+      
+    }
+    else{
+      const leavegroup = await UserGroup.destroy({
+        where:{
+          userId: UserId,
+          groupId:groupId
+        }
+      })
+      return res.status(200).json({ success: true, message: 'Left the group successfully' });
+    }
+    
+ } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Something went wrong' });
+  }
+};
+
+exports.DeleteGroup=async (req,res,next)=>{
+  try {
+    const {  groupId } = req.body;
+    const adminuserid = req.user.id;
+
+    const checkadmin = await UserGroup.findOne({
+      where: {
+        isadmin:'true',
+        userId: adminuserid,
+        groupId: groupId
+      }
+    });
+
+    if (checkadmin) {
+      const deletegroup = await Group.destroy({
+        where:{
+          id: groupId
+        }
+      })
+      const deleteusersofthegroup = await UserGroup.destroy({
+        where:{
+          groupId:groupId
+        }
+      })
+  
+        return res.status(200).json({ success: true, message: 'Group Deleted Successfully' });
+    }
+    else{
+      return res.status(200).json({ success: false, message: 'admin`s only delete the group' });
+    }
+    
+
+    
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Something went wrong' });
+  }
+
 }

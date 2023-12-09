@@ -219,3 +219,63 @@ async function removeadmin(id){
         console.log(err)
     }
 }
+
+const leavegroupbtn = document.getElementById('leavegroup');
+leavegroupbtn.addEventListener('click',async ()=>{
+    try{
+        const selectedGroup = document.querySelector('.group-name.active');
+            const groupId = selectedGroup.dataset.groupId;
+            const token = localStorage.getItem('token');
+            const data = {
+                groupId
+            }
+            const response =await  axios.post(`${API}/leavegroup`,data,{
+                headers: {
+                    Authorization: token
+                }
+            })
+            if(response){
+                if(response.data.message==='Left the group successfully'){
+                    alert(response.data.message);
+                    window.location.href='/chat';
+                }
+                else{
+                    alert(response.data.message)
+                    show_groups_members();
+                }
+            }
+        }
+        catch(err){
+            console.log(err)
+        }
+})
+
+const deletegroupbtn = document.getElementById('delete group');
+deletegroupbtn.addEventListener('click',async ()=>{
+    try{
+        const selectedGroup = document.querySelector('.group-name.active');
+            const groupId = selectedGroup.dataset.groupId;
+            const token = localStorage.getItem('token');
+            const data = {
+                groupId
+            }
+            const response =await  axios.post(`${API}/deletegroup`,data,{
+                headers: {
+                    Authorization: token
+                }
+            })
+            if(response){
+                if(response.data.message==='admin`s only delete the group'){
+                    alert(response.data.message);
+                    show_groups_members();
+                }
+                else{
+                    alert(response.data.message)
+                    window.location.href='/chat';
+                }
+            }
+        }
+        catch(err){
+            console.log(err)
+        }
+})

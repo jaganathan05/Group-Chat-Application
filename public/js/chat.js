@@ -1,6 +1,6 @@
 const chatBox = document.getElementById('chatBoxcontainer');
 const sendbtn = document.getElementById('sendmessage');
-const API = 'http://localhost:3000';
+const API = 'http://13.200.1.178:3000';
 
 sendbtn.addEventListener('click', (event) => {
     var textarea = document.getElementById('messageInput');
