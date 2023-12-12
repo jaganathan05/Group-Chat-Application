@@ -2,7 +2,7 @@
 
 const showpasswordbox = document.getElementById('showpassword');
 const password = document.getElementById('password');
-const Api ='http://localhost:3000';
+const Api ='http://13.200.1.178:3000';
 showpasswordbox.onclick = () => {
     if (showpasswordbox.checked) {
         password.type = "text";
