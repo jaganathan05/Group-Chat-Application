@@ -70,6 +70,8 @@ exports.createGroup = async (req, res, next) => {
 exports.GetGroups=async(req,res,next)=>{
 
   try{
+
+    
       const usergroups = await UserGroup.findAll({
         where:{
           userId: req.user.id

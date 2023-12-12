@@ -3,9 +3,17 @@ const bcrypt = require('bcrypt');
 const User = require('../models/users');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-exports.Get_Signup=(req,res,next)=>{
-    res.sendFile(path.join(__dirname,'..','public','views','signup.html'));
-}
+
+
+
+
+
+exports.Get_Signup = (req, res, next) => {
+    res.sendFile(path.join(__dirname, '..', 'public', 'views', 'signup.html'));
+
+    // Handle socket connections
+
+  }
 
 exports.Post_Signup =async (req, res, next) => {
     try{
@@ -40,6 +48,8 @@ exports.Post_Signup =async (req, res, next) => {
 
 exports.Get_Login =(req,res,next)=>{
     res.sendFile(path.join(__dirname,'..','public','views','login.html'))
+    
+    
 }
 
 exports.Post_login = async (req,res,next)=>{

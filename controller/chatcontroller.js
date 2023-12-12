@@ -6,12 +6,29 @@ const sequelize = require('../helper/database');
 const {Op} = require('sequelize');
 const chats = require('../models/chats');
 
+const socketIO = require('socket.io');
+const io = socketIO(5000,{
+    cors: {
+        origin: "http://localhost:3000"
+    }
+});
+
+io.on('connection', (socket) => {
+
+    
+    console.log('A user connected with ID:', socket.id);
+    console.log('login');
+}); 
+
+
+
+
 exports.Post_Message = async(req,res,next)=>{
     try{
         const user =req.user;
         const {message,groupId} = req.body;
 
-        Chats.create({
+         Chats.create({
             name: user.name,
             message: message,
             userId: user.id,
@@ -19,6 +36,7 @@ exports.Post_Message = async(req,res,next)=>{
         })
         .then(savemessage => {
             // handle success
+            io.emit('receivemessage', { savemessage,groupId });
             return res.status(200).json({ success: true, message: 'Message sent' });
         })
         .catch(err => {
@@ -37,6 +55,9 @@ exports.Post_Message = async(req,res,next)=>{
 exports.Get_Messages = async (req,res,next)=>{
     
     try{
+
+        
+
         const groupid = req.query.groupid
         const allchats = await Chats.findAll({
             where:{
@@ -59,30 +80,5 @@ exports.Get_Messages = async (req,res,next)=>{
     
 
 }
-exports.Get_New_Messages=async(req,res,next)=>{
-    try{
-    const lastmessage = req.query.lastmessageid ;
-    const groupid = req.query.groupid;
 
-    const response = await Chats.findAll({
-        where:{
-            id:{ [Op.gt]: lastmessage
-            },
-            groupId: groupid
-        }
-        
-    })
 
-    const userId = req.user.id;
-    return res.status(200).json({
-        success:true,
-        message: response,
-        userId:userId
-    })
-}
-
-    catch(err){
-        console.log('GET New Message Error', err)
-    }
-    
-}
