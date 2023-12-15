@@ -3,13 +3,14 @@ const bcrypt = require('bcrypt');
 const User = require('../models/users');
 const Chats = require('../models/chats');
 const sequelize = require('../helper/database');
-const {Op} = require('sequelize');
-const chats = require('../models/chats');
+const ArchivedChats = require('../models/archieved_chats');
+
 
 const socketIO = require('socket.io');
+const chats = require('../models/chats');
 const io = socketIO(5000,{
     cors: {
-        origin: "http://13.200.1.178:3000"
+        origin: "http://localhost:3000"
     }
 });
 
@@ -19,8 +20,6 @@ io.on('connection', (socket) => {
     console.log('A user connected with ID:', socket.id);
     console.log('login');
 }); 
-
-
 
 
 exports.Post_Message = async(req,res,next)=>{
@@ -52,6 +51,7 @@ exports.Post_Message = async(req,res,next)=>{
 
 }
 
+
 exports.Get_Messages = async (req,res,next)=>{
     
     try{
@@ -82,3 +82,34 @@ exports.Get_Messages = async (req,res,next)=>{
 }
 
 
+exports.oldmessages=async(req,res,next)=>{
+    try{
+    const groupid = req.query.groupid
+        
+        
+        const oldmessages = await ArchivedChats.findAll({
+            where:{
+                groupId: groupid
+            },
+            order:[['createdAt','ASC']],
+        });
+        
+        const newmessages = await chats.findAll({
+            where:{
+                groupId: groupid
+            },
+            order:[['createdAt','ASC']],
+        });
+        const allchats = [...oldmessages, ...newmessages];
+
+        const userId = req.user.id;
+        return res.status(200).json({
+            success:true,
+            message: allchats,
+            userId:userId
+        })
+    }
+    catch(err){
+        console.log('GET Messages err',err)
+    }
+}

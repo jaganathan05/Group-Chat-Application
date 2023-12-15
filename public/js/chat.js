@@ -1,9 +1,9 @@
 const chatBox = document.getElementById('chatBoxcontainer');
 const sendbtn = document.getElementById('sendmessage');
-const API = 'http://13.200.1.178:3000';
+const API = 'http://localhost:3000';
 let currentUserId ;
 
-const socket = io('http://13.200.1.178:5000');
+const socket = io('http://localhost:5000');
 socket.on('connect', () => {
     console.log('Connected with ID:', socket.id);
 });
@@ -59,6 +59,9 @@ sendbtn.addEventListener('click', (event) => {
     
 });
 
+
+
+
 window.addEventListener('DOMContentLoaded', async()=>{
     const token = localStorage.getItem('token'); 
     const groupSettingsIcon = document.getElementById('groupsettings');
@@ -106,6 +109,10 @@ window.addEventListener('DOMContentLoaded', async()=>{
     
             const groupId = groupElement.dataset.groupId;
             chat_container.innerHTML = '';
+            chat_container.innerHTML=`<div class="centered-container">
+            <button onclick="getoldmessages(event)" class=" form-control btn-dark">Old Archived Messages</button>
+            <h3>Today messages</h3>
+        </div>`
             await loadGroupMessages(groupId);
 
             if (groupElement.classList.contains('active')) {
@@ -250,3 +257,36 @@ const groupSettingsIcon = document.getElementById('groupsettings');
 groupSettingsIcon.addEventListener('click',()=>{
     
 })
+
+
+async function getoldmessages(event){
+    event.preventDefault();
+    console.log('btn')
+    try {
+        const chat_container = document.getElementById('chatBox');
+        const token = localStorage.getItem('token');
+        const selectedGroup = document.querySelector('.group-name.active');
+        const groupId = selectedGroup.dataset.groupId;
+
+        const response = await axios.get(`${API}/chat/getoldmessages?groupid=${groupId}`, {
+            headers: {
+                Authorization: token
+            }
+        });
+
+        if (response) {
+            currentUserId = response.data.userId;
+            chat_container.innerHTML = ''; // Clear previous content
+            chat_container.innerHTML = `
+                <div class="centered-container">
+                    <h3>All messages</h3>
+                </div>`;
+
+            response.data.message.forEach(chat => {
+                show_messages(chat, currentUserId);
+            });
+        }
+    } catch (err) {
+        console.log(err);
+    }
+};

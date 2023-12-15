@@ -49,8 +49,7 @@
             </div>
             <div class="col-md-8" id="showmembercontainer">
                 <div class="members-container" id="membersBox">
-                    <button id="closemembers">close</button>
-                    <br>
+
                 </div>
             </div>
             <div class="col-md-8" id="addnewmembercontainer" >
@@ -67,12 +66,16 @@
             <div class="col-md-8" id="chatBoxcontainer" >
                 
                 <div class="chat-container" id="chatBox">
+                    <div class="centered-container">
+                        <button id="oldmesssage" class=" form-control btn-dark">Old Archived Messages</button>
+                        <h3>Today messages</h3>
+                    </div>
                     <!-- Chat messages will be displayed here -->
                 </div>
                 
                 
                 <div class="row">
-                    <textarea class="col-md-8" id="messageInput" placeholder="Type your message here" required></textarea>
+                    <textarea class="col-md-8" id="messageInput" placeholder="Type your message here" name='message' required></textarea>
                     <button class="col-md-2 btn btn-primary" id="sendmessage">Send</button>
                 </div>
             </div>
@@ -81,6 +84,7 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.1.2/socket.io.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.2/axios.min.js" integrity="sha512-b94Z6431JyXY14iSXwgzeZurHHRNkLt9d6bAHt7BZT38eqV+GyngIi/tVye4jBKPYQ2lBdRs0glww4fmpuLRwA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
 <script src="/js/chat.js"></script>
 <script src="/js/group.js"></script>
 

@@ -224,6 +224,17 @@ textarea {
     border-bottom: 2px solid #ccc;
     padding-bottom: 10px;
   }
+  .centered-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#oldMessagesBtn {
+    margin-bottom: 10px; /* Adjust as needed */
+}
+
 
 
 @media (min-width: 768px) {

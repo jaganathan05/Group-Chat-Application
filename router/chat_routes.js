@@ -8,6 +8,7 @@ router.post('/sendmessage',auth_middleware.authentication,chat_controller.Post_M
 
 router.get('/getmessage',auth_middleware.authentication,chat_controller.Get_Messages);
 
+router.get('/getoldmessages',auth_middleware.authentication,chat_controller.oldmessages);
 
 
 
