@@ -379,11 +379,7 @@ exports.DeleteGroup=async (req,res,next)=>{
           id: groupId
         }
       })
-      const deleteusersofthegroup = await UserGroup.destroy({
-        where:{
-          groupId:groupId
-        }
-      })
+      
   
         return res.status(200).json({ success: true, message: 'Group Deleted Successfully' });
     }

@@ -5,7 +5,7 @@ const ArchivedChat = require("../models/archieved_chats");
 
 const job = async (req,res,next) =>{
     try {
-        // Runs at 3:27 PM every day
+
         const yesterday = new Date(Date.now() - 24 * 60 * 60 * 1000); // 1 day ago
     
         // Find chats created more than 24 hours ago

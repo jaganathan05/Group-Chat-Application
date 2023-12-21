@@ -10,7 +10,7 @@ const socketIO = require('socket.io');
 const chats = require('../models/chats');
 const io = socketIO(5000,{
     cors: {
-        origin: "http://13.200.1.178:3000"
+        origin: "http://localhost:3000"
     }
 });
 

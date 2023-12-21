@@ -4,6 +4,11 @@ const sequelize = require('./helper/database');
 const path = require('path');
 const cors = require('cors');
 
+const helmet = require('helmet');
+const compression = require('compression');
+const morgan = require('morgan');
+const fs = require('fs');
+
 
 const socketIO = require('socket.io')
 require('dotenv').config();
@@ -55,10 +60,10 @@ Chats.belongsTo(User);
 User.hasMany(Groups);
 Groups.belongsTo(User);
 
-Groups.hasMany(UserGroup);
-UserGroup.belongsTo(Groups);
+Groups.hasMany(UserGroup,{ onDelete: 'CASCADE' ,hooks: true});
+UserGroup.belongsTo(Groups );
 
-Groups.hasMany(Chats);
+Groups.hasMany(Chats,{ onDelete: 'CASCADE' ,hooks: true});
 Chats.belongsTo(Groups);
 
 User.hasMany(UserGroup);
@@ -67,7 +72,7 @@ UserGroup.belongsTo(User);
 User.hasMany(archieved_chats);
 archieved_chats.belongsTo(User);
 
-Groups.hasMany(archieved_chats);
+Groups.hasMany(archieved_chats,{ onDelete: 'CASCADE' ,hooks: true});
 archieved_chats.belongsTo(Groups)
 
 
@@ -76,7 +81,15 @@ app.use(user_routes);
 app.use('/chat', chat_routes);
 app.use(group_routes);
 
+app.use(helmet());// set secure headers
 
+const accessLogStream = fs.createWriteStream(
+    path.join(__dirname,'access.log'),
+    {flags: 'a'}
+)
+
+app.use(compression());
+app.use(morgan('combined',{stream:accessLogStream }));
 
 sequelize.sync().then(() => {
   app.listen(port)

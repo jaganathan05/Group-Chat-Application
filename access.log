@@ -1,4 +1,1 @@
-::1 - - [15/Dec/2023:17:35:58 +0000] "GET /chat HTTP/1.1" 304 - "http://13.200.1.178:3000/login" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
-::1 - - [15/Dec/2023:17:35:59 +0000] "GET /css/chats.css HTTP/1.1" 304 - "-" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
-::1 - - [15/Dec/2023:17:35:59 +0000] "GET /js/chat.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
-::1 - - [15/Dec/2023:17:35:59 +0000] "GET /js/group.js HTTP/1.1" 304 - "-" "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
+::1 - - [21/Dec/2023:04:06:45 +0000] "GET /favicon.ico HTTP/1.1" 404 150 "http://localhost:3000/signup" "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"

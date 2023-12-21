@@ -1,9 +1,9 @@
 const chatBox = document.getElementById('chatBoxcontainer');
 const sendbtn = document.getElementById('sendmessage');
-const API = 'http://13.200.1.178:3000';
+const API = 'http://localhost:3000';
 let currentUserId ;
 
-const socket = io('http://13.200.1.178:5000');
+const socket = io('http://localhost:5000');
 socket.on('connect', () => {
     console.log('Connected with ID:', socket.id);
 });
@@ -101,7 +101,6 @@ window.addEventListener('DOMContentLoaded', async()=>{
             if (addgroupform.style.display === 'block') {
                 addgroupcancel.style.display = 'block';
     
-                // Trigger the click event on addgroupcancel
                 addgroupcancel.click();
             } else {
                 addgroupbtn.style.display='block';
@@ -261,7 +260,6 @@ groupSettingsIcon.addEventListener('click',()=>{
 
 async function getoldmessages(event){
     event.preventDefault();
-    console.log('btn')
     try {
         const chat_container = document.getElementById('chatBox');
         const token = localStorage.getItem('token');
@@ -276,7 +274,7 @@ async function getoldmessages(event){
 
         if (response) {
             currentUserId = response.data.userId;
-            chat_container.innerHTML = ''; // Clear previous content
+            chat_container.innerHTML = '';
             chat_container.innerHTML = `
                 <div class="centered-container">
                     <h3>All messages</h3>
