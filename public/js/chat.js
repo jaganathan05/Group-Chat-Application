@@ -1,9 +1,9 @@
 const chatBox = document.getElementById('chatBoxcontainer');
 const sendbtn = document.getElementById('sendmessage');
-const API = 'http://localhost:3000';
+const API = 'http://13.200.1.178:3000';
 let currentUserId ;
 
-const socket = io('http://localhost:5000');
+const socket = io('http://13.200.1.178:5000');
 socket.on('connect', () => {
     console.log('Connected with ID:', socket.id);
 });
